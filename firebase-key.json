@@ -1,0 +1,14 @@
+{
+    "type": "service_account",
+    "project_id": "scrapping-tesoreria",
+    "private_key_id": "9e8a98cbb1843fb7bb673b2a5a3dc3ff2d9cf022",
+    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCqSop+8MwYWVvd\nKrjw6a+roEepG6NXLFc7svJhz0MKlJVQXHOixcYOppF5htZYoxv0MRZ8U3HOEz8v\nvDcwPa9DV2Hf4NYv0uEUU34FjPPMlFVYKibEuZN5fPhuXIdRAw9GFGCCUMOC69nt\n/H5795cihHa87HJYQqoaF3BNJg+3tYeXxTVfdXLGUHkYMvFqqGbVbs31yLyDOwAK\niqqcaL+Q9TEB1ismnw4w/omGGRW9UD5F36wWZ5r8Y5kO0ESKCKok3xSFivpeHRVB\nqcsRA31DOhxVMeAfSAe8caL/A+omGHlVUD+RlvkMaQaQdd02NEYlDIMdEY2ykmTq\nDj/AXNApAgMBAAECggEASvm3wY0WZxAM1LMHKzbQPAG9G1UKVQq2O5gdhHfjHgju\nNqwF06A9A91NhpKZ0/u4hoqISmPY4vDxbHxzVf+Kp10VQCM3WmX/6FmcTihRfPzA\nGKmyWQIVzrL5lGmTwFTXCDVXinixo/ZghJobPEx10+I7fxGhhH+Rchxouubrm6eN\nYhXJEfv1/A3vdAiY68du0Ju+9uLkzBI2rUxHn/hiMqF3xXtZwvpmd6DyjK1Q8ZNt\n3zrh3tU3KRCUw62Pd4rN/RseBkUanjVPLLhTlu5JQIBUPPghs+BHPU5ChZR7QD9Y\n8xhaQsVjz22nXEzHU5XE8vbA07yZrSlydIfSbuZoowKBgQDrjNxK9Fb0rnEWSOIb\n1LfQ80j2gjoTZoyf6kZUB7D6C1TNen7Um9pn2jHFfNbNEmZzdScp1CbwtpzaotM4\nbpsSbYDDJ47r17vfbMfjU7yO2tlLvTXEs1OgcX5S2LssQBRSralXwQyeGaTjP2Ow\nxPI/u/nL0SABJT0wppUOCzGtxwKBgQC5E0m8TIKVWxM1NR9mPfBQZZC0lTb/iRST\nUELN1B9LTwWO5n9u7/rJrScb2L9aT43OiSbVHixmvFPftAXI93QpgyV0lNyg2YVU\nYwba0uCXCYRYb6qsS00VYoKjkiWMNC7Xf59w4OrBHLWW7xGMCBiXj3O3bgkFXHNu\nLAWhhnVSjwKBgQC8QiGS+oRBHOafU/L7IWEkbD0FYAHAnbaI3PoGkPsebU4CyAN0\nM3g0how+9c7LqggeASUi5j+VJa5pg7djI+tmqARAdW5iClNKd6uuga9zUXBYe0nt\nAxI0amD3H+dAr5pOliOBUnaeKYrCYVhw4Ido7vjvsB1vLO8h4hHBXqr+4wKBgQCH\n2Eh/FgmjZz4qB9wMR9pkqKgWZJAB8LRRjM/8FH8D3/TMdxOCclM6RQY3wlhyCYKk\n3rbKJ2Of5QwLXy//2uJAtip/7+QhjIf48NbPN4nyUuH5p702ye7Ci5QoS9WTm5nm\nQ57cU7r8E/6V0tSmXCrw1DKzqOimLr3rWBSqAu+KsQKBgQCwoaI00tt0ikxgIhQ8\n6h0hDFh1r9TVDvK2DvP9289y5XOCpCX/goTaVGanyCAojrlnittjQvrQH1NmDrrg\n7xKSGMB5tdxsTZA9DSUq0PbYDTrJhg1edtehI3mdcQwI69P2arel8IFdwVDctg8V\n2C8NXPx0LvP9mYrAIaaljiuQ6Q==\n-----END PRIVATE KEY-----\n",
+    "client_email": "firebase-adminsdk-fbsvc@scrapping-tesoreria.iam.gserviceaccount.com",
+    "client_id": "116576382245177604800",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40scrapping-tesoreria.iam.gserviceaccount.com",
+    "universe_domain": "googleapis.com"
+  }
+  
