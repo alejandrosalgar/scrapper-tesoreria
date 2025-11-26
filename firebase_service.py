@@ -356,42 +356,79 @@ class FirebaseService:
 
     async def get_search_status(self, search_id: str) -> Optional[Dict]:
         """Get search status and metadata"""
-        if not self.db:
+        if not self.db or not self._initialized:
             return None
 
         try:
-            doc_ref = self.db.collection("searches").document(search_id)
-            doc = doc_ref.get()
-            if doc.exists:
-                return doc.to_dict()
+            def get_doc():
+                try:
+                    doc_ref = self.db.collection("searches").document(search_id)
+                    doc = doc_ref.get()
+                    if doc.exists:
+                        return doc.to_dict()
+                    return None
+                except Exception as e:
+                    print(f"Error in get_doc: {e}")
+                    return None
+            
+            # Run with timeout
+            loop = asyncio.get_event_loop()
+            result = await asyncio.wait_for(
+                loop.run_in_executor(None, get_doc), timeout=3.0
+            )
+            return result
+        except asyncio.TimeoutError:
+            print("Timeout getting search status from Firebase (3s)")
             return None
         except Exception as e:
             print(f"Error getting search status: {e}")
+            # Si hay error de autenticación, desactivar Firebase
+            if "Invalid JWT Signature" in str(e) or "invalid_grant" in str(e):
+                print("Firebase authentication failed - disabling Firebase")
+                self._initialized = False
+                self.db = None
             return None
 
     async def get_search_results(
         self, search_id: str, limit: int = 100, offset: int = 0
     ) -> List[Dict]:
         """Get search results with pagination"""
-        if not self.db:
+        if not self.db or not self._initialized:
             return []
 
         try:
-            results_ref = (
-                self.db.collection("searches")
-                .document(search_id)
-                .collection("results")
-                .order_by("relevance_score", direction=firestore.Query.DESCENDING)
-                .offset(offset)
-                .limit(limit)
+            def get_results():
+                try:
+                    results_ref = (
+                        self.db.collection("searches")
+                        .document(search_id)
+                        .collection("results")
+                        .order_by("relevance_score", direction=firestore.Query.DESCENDING)
+                        .offset(offset)
+                        .limit(limit)
+                    )
+                    docs = results_ref.stream()
+                    return [doc.to_dict() for doc in docs]
+                except Exception as e:
+                    print(f"Error in get_results: {e}")
+                    return []
+            
+            # Run with timeout
+            loop = asyncio.get_event_loop()
+            results = await asyncio.wait_for(
+                loop.run_in_executor(None, get_results), timeout=3.0
             )
-
-            docs = results_ref.stream()
-            results = [doc.to_dict() for doc in docs]
             return results
-
+        except asyncio.TimeoutError:
+            print("Timeout getting search results from Firebase (3s)")
+            return []
         except Exception as e:
             print(f"Error getting search results: {e}")
+            # Si hay error de autenticación, desactivar Firebase
+            if "Invalid JWT Signature" in str(e) or "invalid_grant" in str(e):
+                print("Firebase authentication failed - disabling Firebase")
+                self._initialized = False
+                self.db = None
             return []
 
     async def list_recent_searches(self, limit: int = 20) -> List[Dict]:
@@ -417,18 +454,23 @@ class FirebaseService:
                     print(f"Error in get_docs: {e}")
                     return []
 
-            # Run in executor with timeout
+            # Run in executor with shorter timeout
             loop = asyncio.get_event_loop()
             searches = await asyncio.wait_for(
-                loop.run_in_executor(None, get_docs), timeout=5.0  # 5 second timeout
+                loop.run_in_executor(None, get_docs), timeout=3.0  # 3 second timeout
             )
             return searches
 
         except asyncio.TimeoutError:
-            print("Timeout listing searches from Firebase (5s)")
+            print("Timeout listing searches from Firebase (3s) - Firebase may not be configured correctly")
             return []
         except Exception as e:
             print(f"Error listing searches: {e}")
+            # Si hay error de autenticación, marcar Firebase como no disponible
+            if "Invalid JWT Signature" in str(e) or "invalid_grant" in str(e):
+                print("Firebase authentication failed - disabling Firebase for this session")
+                self._initialized = False
+                self.db = None
             return []
 
     async def delete_search(self, search_id: str):
