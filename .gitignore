@@ -6,7 +6,7 @@ __pycache__
 outputs
 
 # Firebase credentials - NO SUBIR AL REPOSITORIO
-firebase-key.json
+# firebase-key.json  # Temporalmente habilitado para Render
 *.json
 !package.json
 !package-lock.json
