@@ -33,7 +33,11 @@ class FirebaseService:
         try:
             # Check if Firebase is already initialized
             if not firebase_admin._apps:
-                # Option 1: Use service account file
+                backend_dir = os.path.dirname(os.path.abspath(__file__))
+                default_key_path = os.path.join(backend_dir, "firebase-key.json")
+                initialized = False
+                
+                # Option 1: Use service account file from environment
                 service_account_path = os.environ.get("FIREBASE_SERVICE_ACCOUNT_PATH")
                 if service_account_path:
                     # Try to resolve relative paths
@@ -41,7 +45,6 @@ class FirebaseService:
                         # Try relative to current directory
                         if not os.path.exists(service_account_path):
                             # Try relative to backend directory
-                            backend_dir = os.path.dirname(os.path.abspath(__file__))
                             alt_path = os.path.join(backend_dir, service_account_path)
                             if os.path.exists(alt_path):
                                 service_account_path = alt_path
@@ -59,10 +62,26 @@ class FirebaseService:
                             print(
                                 f"Firebase initialized from file: {service_account_path}"
                             )
+                            initialized = True
                         except Exception as e:
                             print(f"Error loading Firebase credentials from file: {e}")
-                            raise
-                else:
+                            # Continue to try other options
+                            pass
+                
+                # Option 2: Try default firebase-key.json if not initialized yet
+                if not initialized and os.path.exists(default_key_path):
+                    try:
+                        cred = credentials.Certificate(default_key_path)
+                        firebase_admin.initialize_app(cred)
+                        print(f"Firebase initialized from default file: {default_key_path}")
+                        initialized = True
+                    except Exception as e:
+                        print(f"Error loading Firebase credentials from default file: {e}")
+                        # Continue to try other options
+                        pass
+                
+                # Option 3: Use service account JSON from environment variable
+                if not initialized:
                     # Option 2: Use service account JSON from environment variable
                     service_account_json = os.environ.get(
                         "FIREBASE_SERVICE_ACCOUNT_JSON"
@@ -151,6 +170,7 @@ class FirebaseService:
                                 cred = credentials.Certificate(cred_dict)
                                 firebase_admin.initialize_app(cred)
                                 print("Firebase initialized from environment variable")
+                                initialized = True
                             else:
                                 raise ValueError(
                                     "FIREBASE_SERVICE_ACCOUNT_JSON must be a string"
@@ -168,7 +188,8 @@ class FirebaseService:
                                 print(
                                     f"Context around error: ...{service_account_json[start:end]}..."
                                 )
-                            raise
+                            # Continue to try other options
+                            pass
                         except Exception as e:
                             print(f"Error initializing Firebase from JSON: {e}")
                             print(f"Error type: {type(e).__name__}")
@@ -178,18 +199,21 @@ class FirebaseService:
                             import traceback
 
                             traceback.print_exc()
-                            raise
-                    else:
-                        # Option 3: Use default credentials (for Google Cloud environments)
-                        try:
-                            firebase_admin.initialize_app()
-                            print("Firebase initialized with default credentials")
-                        except Exception as e:
-                            print(f"Warning: Firebase not configured. Error: {e}")
-                            print(
-                                "Results will not be saved. Please configure FIREBASE_SERVICE_ACCOUNT_PATH or FIREBASE_SERVICE_ACCOUNT_JSON"
-                            )
-                            return
+                            # Continue to try other options
+                            pass
+                
+                # Option 4: Use default credentials (for Google Cloud environments)
+                if not initialized:
+                    try:
+                        firebase_admin.initialize_app()
+                        print("Firebase initialized with default credentials")
+                        initialized = True
+                    except Exception as e:
+                        print(f"Warning: Firebase not configured. Error: {e}")
+                        print(
+                            "Results will not be saved. Please configure FIREBASE_SERVICE_ACCOUNT_PATH, FIREBASE_SERVICE_ACCOUNT_JSON, or add firebase-key.json"
+                        )
+                        return
 
             self.db = firestore.client()
             self._initialized = True
