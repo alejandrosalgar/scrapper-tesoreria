@@ -4,3 +4,35 @@ __pycache__
 .desktop
 .ipynb_checkpoints
 outputs
+
+# Firebase credentials - NO SUBIR AL REPOSITORIO
+firebase-key.json
+*.json
+!package.json
+!package-lock.json
+!tsconfig.json
+!angular.json
+!tsconfig.app.json
+
+# Python
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info
+dist/
+build/
+*.log
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db

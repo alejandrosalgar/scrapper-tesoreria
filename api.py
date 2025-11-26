@@ -30,6 +30,7 @@ app.add_middleware(
         "http://localhost:3000",
         "https://scrapping-tesoreria.web.app",  # Firebase Hosting
         "https://scrapping-tesoreria.firebaseapp.com",  # Firebase Hosting (alternativa)
+        "https://scrapper-tesoreria.onrender.com",  # Backend en Render
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -196,7 +197,9 @@ async def list_searches(limit: int = 20):
         searches = await firebase_service.list_recent_searches(limit=limit)
         return {"searches": searches}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        # Si hay error, retornar lista vacía en lugar de fallar
+        print(f"Error listing searches: {e}")
+        return {"searches": []}
 
 
 @app.delete("/api/search/{search_id}")

@@ -568,5 +568,5 @@ class TreasuryScraper:
                     return []
         except Exception as e:
             print(f"Error searching Scopus: {e}")
-            return []
+        return []
 
