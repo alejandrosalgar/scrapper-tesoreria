@@ -101,7 +101,14 @@ async def start_search(request: SearchRequest, background_tasks: BackgroundTasks
         # Enhance query with AI if requested
         enhanced_query = request.query
         if request.use_ai_enhancement:
-            enhanced_query = await treasury_analyzer.enhance_search_query(request.query)
+            try:
+                enhanced_query = await treasury_analyzer.enhance_search_query(
+                    request.query
+                )
+            except Exception as e:
+                print(f"Error enhancing query with AI: {e}")
+                # Continue with original query if AI fails
+                enhanced_query = request.query
 
         # Save search metadata to Firebase
         search_metadata = {
@@ -118,7 +125,12 @@ async def start_search(request: SearchRequest, background_tasks: BackgroundTasks
             "results_count": 0,
         }
 
-        await firebase_service.save_search_metadata(search_id, search_metadata)
+        # Try to save to Firebase, but don't fail if it doesn't work
+        try:
+            await firebase_service.save_search_metadata(search_id, search_metadata)
+        except Exception as e:
+            print(f"Warning: Could not save search metadata to Firebase: {e}")
+            # Continue anyway - the search can still proceed
 
         # Start background task
         background_tasks.add_task(execute_search, search_id, enhanced_query, request)
